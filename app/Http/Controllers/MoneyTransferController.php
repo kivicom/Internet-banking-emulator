@@ -17,6 +17,11 @@ class MoneyTransferController extends Controller
         $payerAccount = $this->infoAccount($request->input('payerAccount'));
         $receiverAccount = $this->infoAccount($request->input('receiverAccount'));
 
+        if (!$receiverAccount){
+            //dd($request);
+            Session::flash('money_transfer_error', "Такого счета {$request->input('receiverAccount')} не существует. Или пользователь закрыл данный счет!");
+            return Redirect::back();
+        }
         $payerSum = $request->input('payerSum');
 
         if (!$receiverAccount){

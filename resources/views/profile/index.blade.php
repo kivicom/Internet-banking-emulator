@@ -20,6 +20,11 @@
                                 {{ Session::get('money_transfer_success') }}
                             </div>
                         @endif
+                        @if (Session::has('money_transfer_error'))
+                            <div class="alert alert-success" role="alert">
+                                {{ Session::get('money_transfer_error') }}
+                            </div>
+                        @endif
 
                         <div class="row">
                             <div class="col-md-3">
