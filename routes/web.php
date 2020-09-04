@@ -25,7 +25,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user/{id}', 'ProfileController@index')->name('profile.index')->middleware('auth');
 
 Route::post('/user_accounts/create', 'AccountController@create')->name('account.create');
+Route::get('/user_accounts/{id}/delete', 'AccountController@destroy')->name('account.delete');
 
 Route::post('/money/transfer', 'MoneyTransferController@index')->name('money.transfer');
 
 Route::get('/user/{id}/transactions', 'TransactionController@index')->name('profile.transactions');
+
+

@@ -10,6 +10,16 @@
 
                     <div class="card-body">
 
+                        @if (Session::has('user_account_delete_success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ Session::get('user_account_delete_success') }}
+                            </div>
+                        @endif
+                        @if (Session::has('user_account_delete_error'))
+                            <div class="alert alert-warning" role="alert">
+                                {{ Session::get('user_account_delete_error') }}
+                            </div>
+                        @endif
                         @if (Session::has('account_success'))
                             <div class="alert alert-success" role="alert">
                                 {{ Session::get('account_success') }}
@@ -21,7 +31,7 @@
                             </div>
                         @endif
                         @if (Session::has('money_transfer_error'))
-                            <div class="alert alert-success" role="alert">
+                            <div class="alert alert-warning" role="alert">
                                 {{ Session::get('money_transfer_error') }}
                             </div>
                         @endif
@@ -38,50 +48,24 @@
 
                             </div>
 
-                            <div class="col-md-3">
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-primary">
-                                        Счет в валюте UAH
-                                    </li>
-                                    @foreach($user_accounts as $user_account)
-                                        @if($user_account->currency == 'UAH')
-                                        <li class="list-group-item">
-                                            №: {{$user_account->account}} Сумма: {{$user_account->amount}}
-                                        </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
+                            @if ($user_accounts)
+                                @foreach($user_accounts as $user_account)
+                                    @if($user_account->currency)
+                                        <div class="col-md-3">
+                                            <ul class="list-group">
+                                                <li class="list-group-item list-group-item-primary">
+                                                    Счет в валюте {{ $user_account->currency }}
+                                                </li>
+                                                <li class="list-group-item">
+                                                    №: {{$user_account->account}} Сумма: {{$user_account->amount}}
+                                                </li>
+                                                <a href="{{ route('account.delete',['id' => $user_account->id]) }}" type="button" class="btn btn-danger">Закрыть счет</a>
+                                            </ul>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
 
-                            <div class="col-md-3">
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-primary">
-                                        Счет в валюте USD
-                                    </li>
-                                    @foreach($user_accounts as $user_account)
-                                        @if($user_account->currency == 'USD')
-                                            <li class="list-group-item">
-                                                №: {{$user_account->account}} Сумма: {{$user_account->amount}}
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-
-                            <div class="col-md-3">
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-primary">
-                                        Счет в валюте EUR
-                                    </li>
-                                    @foreach($user_accounts as $user_account)
-                                        @if($user_account->currency == 'EUR')
-                                            <li class="list-group-item">
-                                                №: {{$user_account->account}} Сумма: {{$user_account->amount}}
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>

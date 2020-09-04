@@ -16,12 +16,12 @@ class AccountController extends Controller
             return Redirect::back();
         }
         $currency = $this->currency($request->input('currency'));
-        $account = $this->get_accounts($request->input('user_id'), $currency['currency']);
+        $account = $this->getAccounts($request->input('user_id'), $currency['currency']);
         if ($account === true){
             Session::flash('account_message', "У Вас уже имеется счет в валюте {$currency['currency']}!");
             return Redirect::back();
         }
-        $account_number = $this->account();
+        $account_number = $this->generateNumber();
         //dd($account_number);
         $userAccount = UserAccount::create([
             'user_id' => $request->input('user_id'),
@@ -47,7 +47,7 @@ class AccountController extends Controller
         return false;
     }
 
-    public function account()
+    public function generateNumber()
     {
         $user_account = UserAccount::latest()->first();
         $account_number  = bcadd($user_account['account'], 1);
@@ -57,7 +57,7 @@ class AccountController extends Controller
         return $account_number;
     }
 
-    public function get_accounts($id, $currency)
+    public function getAccounts($id, $currency)
     {
         $user_accounts = UserAccount::all()->where('user_id', $id);
         foreach ($user_accounts as $account){
@@ -66,5 +66,24 @@ class AccountController extends Controller
             }
         }
         return false;
+    }
+
+    public function chekSum($account)
+    {
+        $user_account = UserAccount::all()->where('account', $account)->first();
+        return $user_account->amount;
+    }
+
+    public function destroy($id) {
+        $user_account = UserAccount::find($id);
+
+        if ($this->chekSum($user_account->account) > 0){
+            Session::flash('user_account_delete_error', "На сету остались денежные средства, их необходимо перевести на другой счет!");
+            return Redirect::back();
+        }
+        $user_account->delete();
+        Session::flash('user_account_delete_success', "Вы успешно закрыли счет!");
+
+        return Redirect::back();
     }
 }
