@@ -32,13 +32,14 @@ class MoneyTransferController extends Controller
             return Redirect::back();
         }
 
+        $payerAccount->amount = $payerAccount->amount - $payerSum;
 
         $exchangerates = $this->currencyConveration($payerAccount->currency, $receiverAccount->currency, $payerSum);
-
-        //dd($exchangerates);
-
-        $payerAccount->amount = $payerAccount->amount - $payerSum;
-        $receiverAccount->amount = $receiverAccount->amount + ($payerSum * $exchangerates);
+        if (isset($exchangerates['from']) && $exchangerates['from'] == 'UAH'){
+            $receiverAccount->amount = $receiverAccount->amount + ($payerSum / $exchangerates['buy']);
+        }else{
+            $receiverAccount->amount = $receiverAccount->amount + ($payerSum * $exchangerates);
+        }
 
         $payerAccount->save();
         $receiverAccount->save();
@@ -105,7 +106,9 @@ class MoneyTransferController extends Controller
             }
             if ($from === self::BASE_CURRENCY){
                 if ($item['ccy'] === $to){
-                    return $item['sale'];
+                    //dd($from);
+                    $item['from'] = $from;
+                    return $item;
                 }
             }
 
