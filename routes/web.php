@@ -22,6 +22,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/users', 'UserController@list')->name('users.list');
+
 Route::get('/user/{id}', 'ProfileController@index')->name('profile.index')->middleware('auth');
 
 Route::post('/user_accounts/create', 'AccountController@create')->name('account.create');
