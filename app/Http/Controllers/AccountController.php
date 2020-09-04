@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\UserAccount;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -11,11 +12,13 @@ class AccountController extends Controller
     public function create(Request $request)
     {
         if ($request->input('currency') == null){
+            Session::flash('account_message', "Необходимо выбрать в какой валюте открыть счет");
             return Redirect::back();
         }
         $currency = $this->currency($request->input('currency'));
         $account = $this->get_accounts($request->input('user_id'), $currency['currency']);
         if ($account === true){
+            Session::flash('account_message', "У Вас уже имеется счет в валюте {$currency['currency']}!");
             return Redirect::back();
         }
         $account_number = $this->account();
@@ -26,6 +29,7 @@ class AccountController extends Controller
             'amount' => $currency['amount'],
             'account' => $account_number,
         ]);
+        Session::flash('account_success', "Вы успешно создали счет в валюте {$currency['currency']}!");
 
         return Redirect::back();
     }

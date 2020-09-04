@@ -22,6 +22,7 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
+                                            <th scope="col">Дата</th>
                                             <th scope="col">Со счета</th>
                                             <th scope="col">На счет</th>
                                             <th scope="col">Сумма</th>
@@ -31,6 +32,7 @@
                                     @foreach($transactions as $i => $transaction)
                                         <tr>
                                             <th scope="row">{{ $i }}</th>
+                                            <td>{{ $transaction->created_at }}</td>
                                             <td>{{ $transaction->currency_from }} {{ $transaction->account_from }}</td>
                                             <td>{{ $transaction->currency_to }} {{ $transaction->account_to }}</td>
                                             <td>{{ $transaction->amount }} {{ $transaction->currency_from }}</td>

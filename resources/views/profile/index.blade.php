@@ -9,69 +9,75 @@
                     <div class="card-header"><h3>Профиль пользователя</h3></div>
 
                     <div class="card-body">
-                        @if (session('profile'))
+
+                        @if (Session::has('account_success'))
                             <div class="alert alert-success" role="alert">
-                                {{ session('profile') }}
+                                {{ Session::get('account_success') }}
+                            </div>
+                        @endif
+                        @if (Session::has('money_transfer_success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ Session::get('money_transfer_success') }}
                             </div>
                         @endif
 
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlInput1">Имя: {{$user->name}}</label>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="exampleFormControlInput1">Email: {{$user->email}}</label>
-                                    </div>
-
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Имя: {{$user->name}}</label>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <ul class="list-group">
-                                        <li class="list-group-item list-group-item-primary">
-                                            Счет в валюте UAH
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Email: {{$user->email}}</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-3">
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-primary">
+                                        Счет в валюте UAH
+                                    </li>
+                                    @foreach($user_accounts as $user_account)
+                                        @if($user_account->currency == 'UAH')
+                                        <li class="list-group-item">
+                                            №: {{$user_account->account}} Сумма: {{$user_account->amount}}
                                         </li>
-                                        @foreach($user_accounts as $user_account)
-                                            @if($user_account->currency == 'UAH')
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+
+                            <div class="col-md-3">
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-primary">
+                                        Счет в валюте USD
+                                    </li>
+                                    @foreach($user_accounts as $user_account)
+                                        @if($user_account->currency == 'USD')
                                             <li class="list-group-item">
                                                 №: {{$user_account->account}} Сумма: {{$user_account->amount}}
                                             </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <ul class="list-group">
-                                        <li class="list-group-item list-group-item-primary">
-                                            Счет в валюте USD
-                                        </li>
-                                        @foreach($user_accounts as $user_account)
-                                            @if($user_account->currency == 'USD')
-                                                <li class="list-group-item">
-                                                    №: {{$user_account->account}} Сумма: {{$user_account->amount}}
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <ul class="list-group">
-                                        <li class="list-group-item list-group-item-primary">
-                                            Счет в валюте EUR
-                                        </li>
-                                        @foreach($user_accounts as $user_account)
-                                            @if($user_account->currency == 'EUR')
-                                                <li class="list-group-item">
-                                                    №: {{$user_account->account}} Сумма: {{$user_account->amount}}
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </div>
+                                        @endif
+                                    @endforeach
+                                </ul>
                             </div>
+
+                            <div class="col-md-3">
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-primary">
+                                        Счет в валюте EUR
+                                    </li>
+                                    @foreach($user_accounts as $user_account)
+                                        @if($user_account->currency == 'EUR')
+                                            <li class="list-group-item">
+                                                №: {{$user_account->account}} Сумма: {{$user_account->amount}}
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,6 +87,12 @@
                     <div class="card-header"><h3>Создать пользовательский счет</h3></div>
 
                     <div class="card-body">
+
+                        @if (Session::has('account_message'))
+                            <div class="alert alert-warning" role="alert">
+                                {{ Session::get('account_message') }}
+                            </div>
+                        @endif
 
                         <form action="{{ route('account.create') }}" method="post">
                             {{csrf_field()}}

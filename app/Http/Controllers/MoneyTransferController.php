@@ -6,6 +6,7 @@ use App\Transaction;
 use App\UserAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class MoneyTransferController extends Controller
 {
@@ -43,6 +44,7 @@ class MoneyTransferController extends Controller
             'payerSum' => $payerSum,
         ];
         $this->transaction($data);
+        Session::flash('money_transfer_success', "Перевод средств успешно завершен!");
 
         return Redirect::back();
     }
